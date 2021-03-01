@@ -1,0 +1,516 @@
+@font-face {
+  font-family: "FuturaHeadline";
+  src: url("./FuturaNowHeadline-Bd.otf");
+}
+
+@font-face {
+  font-family: "FuturaRegular";
+  src: url("./FuturaNowScript-Rg.otf");
+}
+
+* {
+  font-family: "FuturaHeadline";
+}
+
+h1,
+h2,
+h3,
+label {
+  font-family: "FuturaHeadline";
+}
+
+h4,
+h5,
+p {
+  font-family: "FuturaRegular" !important;
+}
+
+.color1 {
+  background-color: #f4faff;
+  color: #535657;
+  border: 1px solid #b7adcf;
+}
+
+.color2 {
+  background-color: #535657;
+  color: #dee7e7;
+  border: 1px solid #b7adcf;
+}
+
+.color3 {
+  background-color: #b7adcf;
+  color: #c7d2d8;
+  border: 1px solid #b7adcf;
+}
+
+.color4 {
+  background-color: #535657;
+  color: #f4faff;
+  border: 1px solid #f4faff;
+}
+
+a {
+  color: #535657;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #c7d2d8;
+}
+
+.homeimage {
+  border: #c7d2d8 solid 1px;
+  border-radius: 2px;
+}
+
+.infobtn {
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.infobtn:hover {
+  color: #b7adcf;
+}
+
+.hovering {
+  background-color: #b7adcf;
+  padding-bottom: 2px;
+  background: -webkit-gradient(linear, left top, left bottom, from(#b7adcf), to(#dee7e7)) center bottom;
+  background: linear-gradient(#b7adcf, #dee7e7) center bottom;
+  background-size: 0% 2px;
+  background-repeat: no-repeat;
+  -webkit-transition: all 0.45s;
+  transition: all 0.45s;
+}
+
+.greying {
+  color: #c7d2d8;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+}
+
+.greying:hover {
+  color: #b7adcf;
+}
+
+.hovering:hover {
+  background-size: 100% 2px;
+  text-decoration: none;
+}
+
+.btn {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  background-color: #b7adcf;
+  color: #535657;
+}
+
+.btn:hover {
+  -webkit-transform: scale(1.05, 1.05);
+          transform: scale(1.05, 1.05);
+  text-decoration: underline;
+}
+
+label:hover {
+  text-decoration: underline;
+}
+
+html,
+body,
+#react-app {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  border: 4px #c7d2d8 solid;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #f4faff;
+  background-size: 40px 40px;
+  background-image: radial-gradient(circle, #000000 1px, #f4faff 1px);
+  background-attachment: fixed;
+}
+
+.reviewtable th {
+  cursor: pointer;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.reviewtable th:hover {
+  text-decoration: underline;
+}
+
+input {
+  border: none;
+  outline: 1px dashed #c7d2d8;
+}
+
+input::-webkit-input-placeholder {
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+}
+
+input:-ms-input-placeholder {
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+}
+
+input::-ms-input-placeholder {
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+}
+
+input::placeholder {
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+}
+
+input:focus::-webkit-input-placeholder {
+  font-size: 0px;
+}
+
+input:focus:-ms-input-placeholder {
+  font-size: 0px;
+}
+
+input:focus::-ms-input-placeholder {
+  font-size: 0px;
+}
+
+input:focus::placeholder {
+  font-size: 0px;
+}
+
+.inputfield::-webkit-file-upload-button {
+  display: none;
+}
+
+.inputfield:hover::before {
+  border-color: #535657;
+}
+
+.inputfield:active::before {
+  background: -webkit-linear-gradient(top, #b7adcf);
+}
+
+.catbutton {
+  opacity: 0;
+  padding-left: 20px;
+  cursor: pointer;
+}
+
+.catbutton + label {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.catbutton:checked + label {
+  border-radius: 40%;
+  -webkit-transform: scale(1.1, 1.1);
+          transform: scale(1.1, 1.1);
+  text-decoration: underline;
+}
+
+.avidiv img {
+  width: 60px;
+}
+
+.aviinput {
+  opacity: 0;
+  margin: 5px;
+}
+
+.aviinput + label img {
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  cursor: pointer;
+  border-radius: 20%;
+  padding: 4px;
+}
+
+.aviinput:hover + label img {
+  background-color: #dee7e7;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-transform: scale(1.1, 1.1);
+          transform: scale(1.1, 1.1);
+}
+
+.aviinput:checked + label img {
+  text-decoration: none;
+  background-color: #dee7e7;
+  border-radius: 20%;
+}
+
+.ratinginput {
+  opacity: 0;
+  margin: 5px;
+}
+
+.reviewrow img {
+  width: 45px;
+}
+
+.ratinginput + label img {
+  background-color: #c7d2d8;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  cursor: pointer;
+  border-radius: 20%;
+}
+
+.ratinginput:hover + label img {
+  background-color: #c7d2d8;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-transform: scale(1.1, 1.1);
+          transform: scale(1.1, 1.1);
+}
+
+.ratinginput:checked + label img {
+  text-decoration: none;
+  background-color: #b7adcf;
+  border-radius: 20%;
+}
+
+.lds-facebook {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-facebook div {
+  display: inline-block;
+  position: absolute;
+  left: 8px;
+  width: 16px;
+  background: #535657;
+  -webkit-animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+          animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+
+.lds-facebook div:nth-child(1) {
+  left: 8px;
+  -webkit-animation-delay: -0.24s;
+          animation-delay: -0.24s;
+}
+
+.lds-facebook div:nth-child(2) {
+  left: 32px;
+  -webkit-animation-delay: -0.12s;
+          animation-delay: -0.12s;
+}
+
+.lds-facebook div:nth-child(3) {
+  left: 56px;
+  -webkit-animation-delay: 0;
+          animation-delay: 0;
+}
+
+@-webkit-keyframes lds-facebook {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%,
+  100% {
+    top: 24px;
+    height: 32px;
+  }
+}
+
+@keyframes lds-facebook {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%,
+  100% {
+    top: 24px;
+    height: 32px;
+  }
+}
+
+.lds-grid {
+  display: inline-block;
+  position: absolute;
+  top: 25%;
+  left: 40%;
+  width: 400px;
+  height: 400px;
+}
+
+.lds-grid div {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  -webkit-animation: lds-grid 1.2s linear infinite;
+          animation: lds-grid 1.2s linear infinite;
+}
+
+.lds-grid div:nth-child(1) {
+  top: 32px;
+  left: 32px;
+  background: #535657;
+  -webkit-animation-delay: 0s;
+          animation-delay: 0s;
+}
+
+.lds-grid div:nth-child(2) {
+  top: 32px;
+  left: 128px;
+  background: #dee7e7;
+  -webkit-animation-delay: -0.4s;
+          animation-delay: -0.4s;
+}
+
+.lds-grid div:nth-child(3) {
+  top: 32px;
+  left: 224px;
+  background: #b7adcf;
+  -webkit-animation-delay: -0.8s;
+          animation-delay: -0.8s;
+}
+
+.lds-grid div:nth-child(4) {
+  top: 128px;
+  left: 32px;
+  background: #c7d2d8;
+  -webkit-animation-delay: -0.4s;
+          animation-delay: -0.4s;
+}
+
+.lds-grid div:nth-child(5) {
+  top: 128px;
+  left: 128px;
+  background: #535657;
+  -webkit-animation-delay: -0.8s;
+          animation-delay: -0.8s;
+}
+
+.lds-grid div:nth-child(6) {
+  top: 128px;
+  left: 224px;
+  background: #535657;
+  -webkit-animation-delay: -1.2s;
+          animation-delay: -1.2s;
+}
+
+.lds-grid div:nth-child(7) {
+  top: 224px;
+  left: 32px;
+  background: #dee7e7;
+  -webkit-animation-delay: -0.8s;
+          animation-delay: -0.8s;
+}
+
+.lds-grid div:nth-child(8) {
+  top: 224px;
+  left: 128px;
+  background: #b7adcf;
+  -webkit-animation-delay: -1.2s;
+          animation-delay: -1.2s;
+}
+
+.lds-grid div:nth-child(9) {
+  top: 228px;
+  left: 228px;
+  background: #dee7e7;
+  -webkit-animation-delay: -1.6s;
+          animation-delay: -1.6s;
+}
+
+@-webkit-keyframes lds-grid {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes lds-grid {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.arrow1 {
+  height: 50px;
+  cursor: pointer;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+
+.arrow1:hover {
+  -webkit-transform: rotate(180deg) scale(0.95);
+          transform: rotate(180deg) scale(0.95);
+}
+
+.arrow2 {
+  height: 50px;
+  cursor: pointer;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+}
+
+.arrow2:hover {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+
+.closebtn {
+  cursor: pointer;
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+  color: #b7adcf;
+  font-size: 30px;
+}
+
+.closebtn:hover {
+  color: #c7d2d8;
+}
+
+body::-webkit-scrollbar {
+  width: 11px;
+}
+
+.chatboxdiv::-webkit-scrollbar {
+  background-color: #b7adcf;
+}
+
+.chatboxdiv::-webkit-scrollbar-track {
+  background-color: #c7d2d8;
+}
+
+.chatboxdiv::-webkit-scrollbar-thumb {
+  background-color: #b7adcf;
+  border-radius: 6px;
+}
+
+.socialbox {
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.socialbox:active {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+/*# sourceMappingURL=styles.css.map */
