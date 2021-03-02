@@ -72,11 +72,32 @@ export default function App() {
 			]).then(() => refreshData(_userId));
 		}
 	};
+useEffect(() => {
 
-	const handleSelf = useCallback((_userdata) => {
-		setSelf(_userdata);
-		setIsLogged(true);
-	}, []);
+	return () => {
+	}
+}, [])
+const handleSelf = useCallback((_userdata) => {
+	setSelf(_userdata);
+	setIsLogged(true);
+}, []);
+
+	useEffect(() => {
+		if (localStorage.getItem("mytoken")) {
+		  axios({
+			method: "get",
+			url: config.apiUrl + "users/userfromtoken",
+			headers: {
+			  "x-auth-token": localStorage.getItem("mytoken").slice(1, -1),
+			},
+		  }).then((res) => {
+			console.log(res);
+			handleSelf(res.data[0]);
+		  });
+		} else {
+		  setIsLogged(false);
+		}
+	  }, [handleSelf]);
 
 	const handleSend = (_senderId, _recipentId, _payload) => {
 		handleOutgoingMessage(_senderId, _recipentId, _payload);

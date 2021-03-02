@@ -54,7 +54,18 @@ router.get("/all", async (req, res) => {
       res.status(400).json(err);
     });
 });
-
+router.get("/userfromtoken", authToken, async (req, res) => {
+  userModel
+    .find({
+      _id: req._id,
+    })
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+});
 
 router.post("/login", async (req, res) => {
   let valid = validLogin(req.body);
