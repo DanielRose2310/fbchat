@@ -54,11 +54,12 @@ router.get("/all", async (req, res) => {
       res.status(400).json(err);
     });
 });
+
 router.get("/userfromtoken", authToken, async (req, res) => {
   userModel
     .find({
       _id: req._id,
-    })
+    }, {pass:0})
     .then((data) => {
       res.json(data);
     })

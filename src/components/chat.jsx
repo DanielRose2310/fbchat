@@ -1,15 +1,19 @@
 import { Animated } from "react-animated-css";
 import React, { useCallback } from 'react';
 import ReactTooltip from 'react-tooltip';
+import {InView} from "react-intersection-observer";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import "../styles.css"
 const FA = require('react-fontawesome')
 
 export const ChatBox = (props) => {
+
   const scrollRef = useCallback(node=>{
     if (node){
     node.scrollIntoView({smooth:'true'})
     }
   },[])
+
   return  <div
   className="position-fixed w-100"
   style={{ bottom: 0, zIndex: 0 }}
@@ -25,9 +29,11 @@ export const ChatBox = (props) => {
       style={{ width: "24px", height: "24px" }}
     ></img><p>&nbsp;{partner.userName}</p></span>
       <FA name="times" className=" closebtn col-1
-            " onClick={(e) => { props.handleCloseChat(partner._id) }} />
+            " onClick={() => { props.handleCloseChat(partner._id, ) }} />
     </div>
-    <div className="chatboxdiv" style={{ height: "280px", overflowY: "auto" }}>
+    <div className="chatboxdiv d-flex flex-column" style={{ height: "280px", overflowY: "auto" }}>
+    <InView as="span"  onChange={(inView)=>{if (inView){props.getBatch(partner._id,2); console.log(InView.length)}}} class="align-self-center m-1"><FA name="arrow-circle-up" style={{fontSize:"24px"}} />
+    </InView>
       {props.chatRows.map(msg =>
         msg.senderId === partner._id || msg.recipientId === partner._id ?
           msg.senderId===props.self._id ?

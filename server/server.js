@@ -60,8 +60,8 @@ io.on('connection', function (socket) {
       console.log(onlineUsers.length+" are online now")
     })
     socket.on("SEND_MESSAGE", (_messagepacket) => {
-      console.log(_messagepacket)
   if (onlineUsers.find(user=>user.userId===_messagepacket.recipientId)){
+    console.log(_messagepacket)
     io.to(onlineUsers.find(user=>user.userId===_messagepacket.recipientId).socketId).emit("RECEIVE_MESSAGE",_messagepacket)
     io.to(onlineUsers.find(user=>user.userId===_messagepacket.senderId).socketId).emit("RECEIVE_MESSAGE",_messagepacket)
   }else{
