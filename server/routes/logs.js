@@ -14,7 +14,6 @@ router.get('/', function (req, res) {
 });
 router.get('/batch/:chatId/:index', function (req, res) {
 	let index = req.params.index;
-	console.log(index*5, (index*5)+5)
 	logModel
 		.aggregate([
 			{
@@ -24,10 +23,9 @@ router.get('/batch/:chatId/:index', function (req, res) {
 			{ $group: { _id: '$_id', messages: { $push: '$messages' } } },{
 			$project:{
 				messages:{$slice:["$messages",(index*-10),10]},
-				 
+				 _id:0
 			}},
 		])
-
 		.then((data) => {
 			res.json(data);
 		})

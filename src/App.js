@@ -14,17 +14,13 @@ import './styles.css';
 export default function App() {
 	const [self, setSelf] = useState([]);
 	const [users, setUsers] = useState([]);
-	const usersRef = useRef([])
+	const usersRef = useRef([]);
 	const [contacts, setContacts] = useState([]);
 	const [onlineUsers, setOnlineUsers] = useState([]);
 	const [isLogged, setIsLogged] = useState(false);
 	const socket = useRef();
-	const activeChatsRef = useRef([]);
 	const [msgContent, setMsgContent] = useState({});
-	const [chatRows, setChatRows] = useState([]);
-	const [chatPartners, setChatPartners] = useState([]);
-	const chatPartnersRef = useRef([]);
-	
+	const [chatLogs, setChatLogs] = useState([]);
 
 	const handleOutgoingMessage = (_senderId, _recipientId, _payload) => {
 		if (_payload) {
@@ -74,27 +70,27 @@ export default function App() {
 		}
 	};
 
-const handleSelf = useCallback((_userdata) => {
-	setSelf(_userdata);
-	setIsLogged(true);
-}, []);
+	const handleSelf = useCallback((_userdata) => {
+		setSelf(_userdata);
+		setIsLogged(true);
+	}, []);
 
 	useEffect(() => {
-		if (localStorage.getItem("mytoken")) {
-		  axios({
-			method: "get",
-			url: config.apiUrl + "users/userfromtoken",
-			headers: {
-			  "x-auth-token": localStorage.getItem("mytoken").slice(1, -1),
-			},
-		  }).then((res) => {
-			console.log(res);
-			handleSelf(res.data[0]);
-		  });
+		if (localStorage.getItem('mytoken')) {
+			axios({
+				method: 'get',
+				url: config.apiUrl + 'users/userfromtoken',
+				headers: {
+					'x-auth-token': localStorage.getItem('mytoken').slice(1, -1),
+				},
+			}).then((res) => {
+				console.log(res);
+				handleSelf(res.data[0]);
+			});
 		} else {
-		  setIsLogged(false);
+			setIsLogged(false);
 		}
-	  }, [handleSelf]);
+	}, [handleSelf]);
 
 	const handleSend = (_senderId, _recipentId, _payload) => {
 		handleOutgoingMessage(_senderId, _recipentId, _payload);
@@ -113,64 +109,59 @@ const handleSelf = useCallback((_userdata) => {
 		setMsgContent((content) => ({ ...content, [_recipientId]: _content }));
 	}, []);
 
-	const handleMakeChatBox = (_partner) => {
-		if (!chatPartners.find((partner) => partner?._id === _partner._id)) {
-			let chatId = [];
-			chatId.push(_partner._id, self._id);
-			chatId = chatId.sort().join('');
-			getLog(chatId, 1);
-			setChatPartners((chatPartners)=>[...chatPartners, _partner]);
-			chatPartnersRef.current.push(_partner);
+	const makeLog = useCallback((_chatId, _index, _partnerId) => {
+		axios.get(`${config.apiUrl}logs/batch/${_chatId}/${_index}`).then((res) => {
+			console.log(res.data[0]);
+			let logBatch = {chatId: _chatId, partnerId: _partnerId, messages:res.data[0].messages};
+			setChatLogs(chatLogs => [...chatLogs, logBatch]);
+		});
+	}, []);
+
+	const handleMakeChatBox = (_partnerId) => {
+		let chatId = [];
+		chatId.push(_partnerId, self._id);
+		chatId = chatId.sort().join('');
+		console.log(_partnerId, self._id)
+		if (!chatLogs.hasOwnProperty(chatId)) {
+			makeLog(chatId, 1, _partnerId);
+
 		}
 	};
 	const handleIncomingMessage = useCallback(
 		(_msg) => {
-			if (
-				!chatPartnersRef.current.find((partner) => partner?._id === _msg.senderId) &&
-				_msg.senderId !== self._id
-			) {
-				let newChatPartner = usersRef.current.find((user) => user._id === _msg.senderId);
-				console.log(newChatPartner)
-				setChatPartners((chatPartners) => [...chatPartners, newChatPartner]);
-				chatPartnersRef.current.push(newChatPartner);
-				getLog(_msg.chatId, 1)
+			if (!chatLogs.find((log) => log.partnerId === _msg.senderId) && _msg.senderId !== self._id) {
+
+				makeLog(_msg.chatId, 1, _msg.senderId);
+			} else {
+				setChatLogs(chatLogs=>[
+					...chatLogs.find(log=>log.chatId===_msg.chatId).messages,_msg])
 			}
-			else {
-				setChatRows((chatRows) => [...chatRows, _msg])
-			};
 		},
-		[self._id]
+		[self._id, makeLog, chatLogs]
 	);
-
-
 
 	const handleRegNewSocket = (_user) => {
 		console.log(_user);
 		socket.current.emit('WELCOME_USER', _user);
 	};
 
-	const handleCloseChat = (_partnerId) => {
-		let chatId = [];
-		chatId.push(_partnerId, self._id);
-		chatId = chatId.sort().join('');
-		setChatPartners(chatPartners.filter((partner) => partner._id !== _partnerId));
-		chatPartnersRef.current = chatPartnersRef.current.filter((partner) => partner._id !== _partnerId);
-		setChatRows(chatRows=>chatRows.filter(chatRow=>chatRow.chatId!==chatId))
+	const handleCloseChat = (_chatId) => {
+		setChatLogs((chatLogs) => chatLogs.filter((log) => log.chatId !== _chatId));
 	};
 
 	const getUsers = useCallback(() => {
-		axios.get(config.apiUrl + 'users/all')
-		.then((res) => {setUsers(res.data)
-		usersRef.current=res.data
-		}
-		)
-		},[]);
+		axios.get(config.apiUrl + 'users/all').then((res) => {
+			setUsers(res.data);
+			usersRef.current = res.data;
+		});
+	}, []);
 
 	useEffect(() => {
 		if (isLogged) {
 			getUsers();
 		}
 	}, [isLogged, getUsers]);
+
 	useEffect(() => {
 		socket.current = io(config.apiUrl, {
 			transports: ['websocket'],
@@ -184,14 +175,14 @@ const handleSelf = useCallback((_userdata) => {
 		});
 
 		socket.current.on('INTRODUCE_USER', (_user) => {
-			getUsers()
+			getUsers();
 		});
 		socket.current.on('RECEIVE_MESSAGE', (_msg) => {
-			console.log(_msg)
+			console.log(_msg);
 			handleIncomingMessage(_msg);
 		});
-
 	}, [self._id, handleIncomingMessage, getUsers]);
+
 	const doContacts = useCallback(() => {
 		let contactData = usersRef.current.filter((user) => self.contacts.includes(user._id));
 
@@ -211,35 +202,34 @@ const handleSelf = useCallback((_userdata) => {
 		setSelf(null);
 	};
 
-	const refreshData = useCallback((_userId) => {
-		Promise.all([
-			axios.get(config.apiUrl + 'users/userprofile/' + _userId),
-			axios.get(config.apiUrl + 'users/all'),
-		]).then((res) => {
-			setSelf(res[0].data);
-			getUsers()
-		});
-	}, [getUsers]);
-
-	const getLog = (_chatId, _index) => {
-			axios.get(`${config.apiUrl}logs/batch/${_chatId}/${_index}`).then((res) => {
-				console.log(res.data[0])
-				setChatRows((chatRows) => [...res.data[0].messages.map(message=>{message.chatId=_chatId; return message}),...chatRows]);
+	const refreshData = useCallback(
+		(_userId) => {
+			Promise.all([
+				axios.get(config.apiUrl + 'users/userprofile/' + _userId),
+				axios.get(config.apiUrl + 'users/all'),
+			]).then((res) => {
+				setSelf(res[0].data);
+				getUsers();
 			});
+		},
+		[getUsers]
+	);
+
+	const getBatch = (_chatId, _index) => {
+		
+		axios.get(`${config.apiUrl}logs/batch/${_chatId}/${_index}`).then((res) => {
+			console.log(res.data[0]);
+			let logs_ar = chatLogs
+			logs_ar.find(log=>log.chatId===_chatId).messages.unshift(...res.data[0].messages)
+			setChatLogs(()=>[...logs_ar])
+		});
+		
 	};
-const getBatch=(_partnerId, _index)=>{
-	let chatId = [];
-	chatId.push(_partnerId, self._id);
-	chatId = chatId.sort().join('');
-	getLog(chatId, _index)
-}
 	return (
 		<>
 			{!isLogged ? (
 				<>
-					<Login handleSelf={handleSelf} 
-					handleRegNewSocket={handleRegNewSocket} 
-					/>
+					<Login handleSelf={handleSelf} handleRegNewSocket={handleRegNewSocket} />
 				</>
 			) : (
 				<div className='row'>
@@ -252,34 +242,33 @@ const getBatch=(_partnerId, _index)=>{
 					<UsersCatalog
 						users={users}
 						handleMakeChatBox={handleMakeChatBox}
-						chatPartners={chatPartners}
 						isLogged={isLogged}
 						self={self}
+						chatPartnersIds={chatLogs.map(log=>log.partnerId)}
 						handleCloseChat={handleCloseChat}
 						handleAddContact={handleAddContact}
 						handleRemoveContact={handleRemoveContact}
 					/>
 					<Social 
-					contacts={contacts} 
-					handleMakeChatBox={handleMakeChatBox} 
-					onlineUsers={onlineUsers} 
+						contacts={contacts} 
+						handleMakeChatBox={handleMakeChatBox} 
+						onlineUsers={onlineUsers} 
+						chatPartnersIds={chatLogs.map(log=>log.partnerId)}
 					/>
-					<ChatBox
-						getBatch={getBatch}
-						chatPartners={chatPartners}
-						handleSend={handleSend}
-						msgContent={msgContent}
-						users={users}
-						handleChatKeypress={handleChatKeypress}
-						handleMsgContent={handleMsgContent}
-						handleOutgoingMessage={handleOutgoingMessage}
-						handleCloseChat={handleCloseChat}
-						handleMakeChatBox={handleMakeChatBox}
-						self={self}
-						onlineUsers={onlineUsers}
-						chats={activeChatsRef}
-						chatRows={chatRows}
-					/>
+						<ChatBox
+							getBatch={getBatch}
+							chatLogs={chatLogs}
+							handleSend={handleSend}
+							msgContent={msgContent}
+							users={users}
+							handleChatKeypress={handleChatKeypress}
+							handleMsgContent={handleMsgContent}
+							handleOutgoingMessage={handleOutgoingMessage}
+							handleCloseChat={handleCloseChat}
+							handleMakeChatBox={handleMakeChatBox}
+							self={self}
+							onlineUsers={onlineUsers}
+						/>
 				</div>
 			)}
 

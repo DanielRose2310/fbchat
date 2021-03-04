@@ -5,37 +5,33 @@ import {InView} from "react-intersection-observer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../styles.css"
 const FA = require('react-fontawesome')
-
 export const ChatBox = (props) => {
-
   const scrollRef = useCallback(node=>{
     if (node){
     node.scrollIntoView({smooth:'true'})
     }
   },[])
-
   return  <div
   className="position-fixed w-100"
   style={{ bottom: 0, zIndex: 0 }}
 >
   <div className="row col-12">
-    {props.chatPartners.map((partner, i) => (
+    {props.chatLogs.map((log, i) => (
   <Animated key={i} animationIn={"bounceInUp"} isVisible={true} className=" d-flex flex-column color2 col-3 mx-1  rounded"
     style={{ zIndex: 3 }}
   >
     <div className="row px-5 justify-content-between mb-2 align-items-center color4"><span className="row pt-3" ><img
-      src={"avi" + partner.image + ".png"}
+      src={"avi" + props.users.find(user=>user._id===log.partnerId).image + ".png"}
       alt="avi"
       style={{ width: "24px", height: "24px" }}
-    ></img><p>&nbsp;{partner.userName}</p></span>
+    ></img><p>&nbsp;{props.users.find(user=>user._id===log.partnerId).userName}</p></span>
       <FA name="times" className=" closebtn col-1
-            " onClick={() => { props.handleCloseChat(partner._id, ) }} />
+            " onClick={() => { props.handleCloseChat(log.chatId, ) }} />
     </div>
     <div className="chatboxdiv d-flex flex-column" style={{ height: "280px", overflowY: "auto" }}>
-    <InView as="span"  onChange={(inView)=>{if (inView){props.getBatch(partner._id,2); console.log(InView.length)}}} class="align-self-center m-1"><FA name="arrow-circle-up" style={{fontSize:"24px"}} />
+    <InView as="span"  onChange={(inView)=>{if (inView){props.getBatch(log.chatId,(Math.floor(log.messages.length/10))+1)}}} className="align-self-center m-1"><FA name="arrow-circle-up" style={{fontSize:"24px"}} />
     </InView>
-      {props.chatRows.map(msg =>
-        msg.senderId === partner._id || msg.recipientId === partner._id ?
+      {log.messages.map(msg =>
           msg.senderId===props.self._id ?
               <span ref={scrollRef} key={Math.random(999999)} className="d-flex mx-1 flex-row-reverse">
                 <img 
@@ -59,19 +55,20 @@ export const ChatBox = (props) => {
                   <b>&nbsp;{props.users.find(user=>msg.senderId===user._id).userName}</b>:&nbsp;
     </p>
                 <p className="py-1"> {msg.payload}</p>
-              </span> : null)}
+              </span> 
+              )}
     </div>
     <div className=" w-100" style={{ bottom: 0 }}>
     </div>
     <span className="row p-1 justify-content-between">
-      <input className="w-75" disabled={!props.onlineUsers.find(onlineuser => onlineuser.userId === partner._id)}
-        value={props.msgContent[partner._id] ? props.msgContent[partner._id] : ""}
-        onChange={(e) => props.handleMsgContent(partner._id, e)}
-        onKeyPress={(e) => { props.handleChatKeypress(props.self._id, partner._id, props.msgContent[partner._id], e) }}
-        placeholder={props.onlineUsers.find(onlineuser => onlineuser.userId === partner._id) ? "Enter your message..." : ""}></input>
-      {props.onlineUsers.find(onlineuser => onlineuser.userId === partner._id) ? <button className="w-25 btn"
+      <input className="w-75" disabled={!props.onlineUsers.find(onlineuser => onlineuser.userId === log.partnerId)}
+        value={props.msgContent[log.partnerId] ? props.msgContent[log.partnerId] : ""}
+        onChange={(e) => props.handleMsgContent(log.partnerId, e)}
+        onKeyPress={(e) => { props.handleChatKeypress(props.self._id, log.partnerId, props.msgContent[log.partnerId], e) }}
+        placeholder={props.onlineUsers.find(onlineuser => onlineuser.userId === log.partnerId) ? "Enter your message..." : ""}></input>
+      {props.onlineUsers.find(onlineuser => onlineuser.userId === log.partnerId) ? <button className="w-25 btn"
         onClick={() => {
-          props.handleSend(props.self._id, partner._id, props.msgContent[partner._id])
+          props.handleSend(props.self._id, log.partnerId, props.msgContent[log.partnerId])
         }}>Submit</button> : <div className="w-25 text-center color2"
         >User Offline!</div>}
     </span>
