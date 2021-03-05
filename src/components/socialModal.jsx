@@ -12,7 +12,7 @@ export function Social(props) {
             {props.contacts.length ? props.contacts.map((contact, i) =><Animated key={i} animationIn="bounceInRight" animationOut="bounceOutRight" className="row justify-content-around px-2 align-items-center"> 
 
             {props.onlineUsers.find(user=>user.userId===contact._id)?
-            props.chatPartnersIds.find(id=>id===contact._id)?
+            props.chatLogs.find(log=>log.partnerId===contact._id)?
             <FA
             name="commenting"/>:
             <FA style={{cursor: "pointer" }} 

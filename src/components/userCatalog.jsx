@@ -10,7 +10,7 @@ export function UsersCatalog(props) {
                     <h5>{user.contacts.length} contacts</h5>
                         {props.self.contacts.includes(user._id) ?
                             <>
-                            {props.chatPartnersIds.find(id=>id===user._id)?<button className="btn" onClick={()=>props.handleCloseChat(user._id)}>Close chat</button>
+                            {props.chatLogs.find(log=>log.partnerId===user._id)?<button className="btn" onClick={()=>props.handleCloseChat(user._id)}>Close chat</button>
                             : <button className="btn" onClick
                             ={()=>props.handleMakeChatBox(user._id)} >Open chat</button>}
                             <button className="btn" onClick={()=>props.handleRemoveContact(props.self._id, user._id)}>Remove from contacts</button></>

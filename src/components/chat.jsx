@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "../styles.css"
 const FA = require('react-fontawesome')
 export const ChatBox = (props) => {
+  console.log(props)
   const scrollRef = useCallback(node=>{
     if (node){
     node.scrollIntoView({smooth:'true'})
@@ -29,8 +30,8 @@ export const ChatBox = (props) => {
             " onClick={() => { props.handleCloseChat(log.chatId, ) }} />
     </div>
     <div className="chatboxdiv d-flex flex-column" style={{ height: "280px", overflowY: "auto" }}>
-    <InView as="span"  onChange={(inView)=>{if (inView){props.getBatch(log.chatId,(Math.floor(log.messages.length/10))+1)}}} className="align-self-center m-1"><FA name="arrow-circle-up" style={{fontSize:"24px"}} />
-    </InView>
+    {log.messages.length<log.msgCount?<InView as="span"  onChange={(inView)=>{if (inView){props.getBatch(log.chatId,(Math.floor(log.messages.length/10))+1)}}} className="align-self-center m-1"><FA name="arrow-circle-up" style={{fontSize:"24px"}} />
+    </InView>:null}
       {log.messages.map(msg =>
           msg.senderId===props.self._id ?
               <span ref={scrollRef} key={Math.random(999999)} className="d-flex mx-1 flex-row-reverse">
