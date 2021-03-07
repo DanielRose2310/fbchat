@@ -21,8 +21,10 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/logs', logsR);
 app.use('/users', usersR);
-http.listen(8080, "127.0.0.1");
-
+const port=process.env.PORT || 3000
+app.listen(port,() => {
+  console.log(`Server running at port `+port);
+  });
 io.on('connection', function (socket) {
     let userObj = {}
     console.log("New socket "+ socket.id +" connected!")
