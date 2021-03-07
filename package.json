@@ -32,6 +32,7 @@
     "react-toastify": "^7.0.3",
     "react-tooltip": "^4.2.15",
     "sass": "^1.32.8",
+    "socket.io": "^3.1.2",
     "socket.io-client": "^3.1.2",
     "uuid": "^8.3.2",
     "web-vitals": "^1.1.0"
