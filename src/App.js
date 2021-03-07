@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import Login from './components/login';
