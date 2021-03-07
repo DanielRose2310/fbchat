@@ -21,8 +21,9 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/logs', logsR);
 app.use('/users', usersR);
-const port=process.env.PORT || 3000
-app.listen(port,() => {
+
+const port=process.env.PORT || 8080
+http.listen(port,() => {
   console.log(`Server running at port `+port);
   });
 io.on('connection', function (socket) {

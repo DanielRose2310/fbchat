@@ -168,7 +168,7 @@ export default function App() {
 
 	useEffect(() => {
 		socket.current = io(config.apiUrl, {
-			transports: ['websocket'],
+			//transports: ['websocket'],
 		});
 		if (self._id) {
 			socket.current.emit('HELLO_USER', self._id);
