@@ -21,7 +21,7 @@ export default function App() {
 	const socket = useRef();
 	const [msgContent, setMsgContent] = useState({});
 	const [chatLogs, setChatLogs] = useState([]);
-	const chatIds = useRef([])
+	const chatIds = useRef([]);
 
 	const handleOutgoingMessage = (_senderId, _recipientId, _payload) => {
 		if (_payload) {
@@ -112,8 +112,7 @@ export default function App() {
 
 	const makeLog = useCallback((_chatId, _index, _partnerId) => {
 		let logBatch = {};
-		axios.get(`${config.apiUrl}logs/batch/${_chatId}/${_index}`)
-		.then((res) => {
+		axios.get(`${config.apiUrl}logs/batch/${_chatId}/${_index}`).then((res) => {
 			if (res.data.length) {
 				console.log(res.data[0]);
 				logBatch = {
@@ -130,9 +129,10 @@ export default function App() {
 					msgCount: 0,
 				};
 			}
-			setChatLogs(chatLogs=>[...chatLogs, logBatch])
-			chatIds.current.push(_chatId)
-	})}, []);
+			setChatLogs((chatLogs) => [...chatLogs, logBatch]);
+			chatIds.current.push(_chatId);
+		});
+	}, []);
 
 	const handleMakeChatBox = (_partnerId) => {
 		let chatId = [];
@@ -151,7 +151,7 @@ export default function App() {
 
 	const handleCloseChat = (_chatId) => {
 		setChatLogs((chatLogs) => chatLogs.filter((log) => log.chatId !== _chatId));
-		chatIds.current = chatIds.current.filter(id=>id!==_chatId)
+		chatIds.current = chatIds.current.filter((id) => id !== _chatId);
 	};
 
 	const getUsers = useCallback(() => {
@@ -185,20 +185,23 @@ export default function App() {
 		socket.current.on('RECEIVE_MESSAGE', (_msg) => {
 			console.log(_msg);
 			if (chatIds.current.find((id) => id === _msg.chatId)) {
-				setChatLogs((chatLogs) => {
-				let newLogs = chatLogs.map((log) => {
-					if (log.chatId === _msg.chatId) {
-						return {
-							...log,
-							messages: [...log.messages, _msg],
-						};
-					}
-					return log;
-				});
-				return newLogs;
-			}, [self._id,makeLog]);
+				setChatLogs(
+					(chatLogs) => {
+						let newLogs = chatLogs.map((log) => {
+							if (log.chatId === _msg.chatId) {
+								return {
+									...log,
+									messages: [...log.messages, _msg],
+								};
+							}
+							return log;
+						});
+						return newLogs;
+					},
+					[self._id, makeLog]
+				);
 			} else {
-				makeLog(_msg.chatId,1, _msg.senderId)
+				makeLog(_msg.chatId, 1, _msg.senderId);
 			}
 		});
 	}, [self._id, getUsers, chatLogs, makeLog]);
@@ -281,22 +284,21 @@ export default function App() {
 						handleMakeChatBox={handleMakeChatBox}
 						onlineUsers={onlineUsers}
 						chatLogs={chatLogs}
-						/>
-						<ChatBox
-							getBatch={getBatch}
-							chatLogs={chatLogs}
-							handleSend={handleSend}
-							msgContent={msgContent}
-							users={users}
-							handleChatKeypress={handleChatKeypress}
-							handleMsgContent={handleMsgContent}
-							handleOutgoingMessage={handleOutgoingMessage}
-							handleCloseChat={handleCloseChat}
-							handleMakeChatBox={handleMakeChatBox}
-							self={self}
-							onlineUsers={onlineUsers}
-						/>
-					
+					/>
+					<ChatBox
+						getBatch={getBatch}
+						chatLogs={chatLogs}
+						handleSend={handleSend}
+						msgContent={msgContent}
+						users={users}
+						handleChatKeypress={handleChatKeypress}
+						handleMsgContent={handleMsgContent}
+						handleOutgoingMessage={handleOutgoingMessage}
+						handleCloseChat={handleCloseChat}
+						handleMakeChatBox={handleMakeChatBox}
+						self={self}
+						onlineUsers={onlineUsers}
+					/>
 				</div>
 			)}
 
