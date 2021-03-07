@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.7.3",
+    "@types/socket.io-client": "^1.4.35",
     "aos": "^2.3.4",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
@@ -29,6 +30,7 @@
     "react-toastify": "^7.0.3",
     "react-tooltip": "^4.2.15",
     "sass": "^1.32.8",
+    "socket.io-client": "^3.1.2",
     "uuid": "^8.3.2",
     "web-vitals": "^1.1.0"
   },
