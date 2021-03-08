@@ -57,7 +57,7 @@ export const ChatBox = (props) => {
                 <p className="py-1"> {msg.payload}</p>
               </span> 
               )}
-             {props.typingUsers.includes(log.partnerId)?<p className="istyping">{props.users.find(user=>user._id===log.partnerId).userName} is typing</p>:null}
+             {props.typingUsers.includes(log.partnerId) && props.onlineUsers.find(onlineuser => onlineuser.userId === log.partnerId)?<p className="istyping">{props.users.find(user=>user._id===log.partnerId).userName} is typing</p>:null}
     </div>
     <div className=" w-100" style={{ bottom: 0 }}>
     </div>
