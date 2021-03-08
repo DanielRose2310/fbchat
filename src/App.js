@@ -20,6 +20,7 @@ export default function App() {
 	const socket = useRef();
 	const [msgContent, setMsgContent] = useState({});
 	const [chatLogs, setChatLogs] = useState([]);
+	const [typingUsers, setTypingUsers] = useState([])
 	const chatIds = useRef([]);
 
 	const handleOutgoingMessage = (_senderId, _recipientId, _payload) => {
@@ -105,9 +106,14 @@ export default function App() {
 	};
 
 	const handleMsgContent = useCallback((_recipientId, e) => {
-		let _content = e.target.value;
-		setMsgContent((content) => ({ ...content, [_recipientId]: _content }));
-	}, []);
+		let _input = e.target.value;
+		setMsgContent((content) => ({ ...content, [_recipientId]: _input }));
+		if (_input.length===1){
+			socket.current.emit('TYPING_ON',self._id, _recipientId)
+		}else if (!_input.length){
+			socket.current.emit('TYPING_OFF',self._id, _recipientId)
+		}
+	}, [self._id]);
 
 	const makeLog = useCallback((_chatId, _index, _partnerId) => {
 		let logBatch = {};
@@ -203,7 +209,14 @@ export default function App() {
 				makeLog(_msg.chatId, 1, _msg.senderId);
 			}
 		});
-	}, [self._id, getUsers, chatLogs, makeLog]);
+		socket.current.on('TYPING_ON', (_userId)=>{
+			setTypingUsers([...typingUsers, _userId])
+		})
+		socket.current.on('TYPING_OFF', (_userId)=>{
+			setTypingUsers(typingUsers.filter(userId=>userId!==_userId))
+		})
+	}, [self._id, getUsers, chatLogs, makeLog, typingUsers]);
+
 
 	const doContacts = useCallback(() => {
 		let contactData = usersRef.current.filter((user) => self.contacts.includes(user._id));
@@ -285,6 +298,7 @@ export default function App() {
 						chatLogs={chatLogs}
 					/>
 					<ChatBox
+						typingUsers={typingUsers}
 						getBatch={getBatch}
 						chatLogs={chatLogs}
 						handleSend={handleSend}

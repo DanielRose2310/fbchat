@@ -28,6 +28,7 @@ h5,
 p {
   font-family: "FuturaRegular" !important;
 }
+
 .color1 {
   background-color: $color1;
   color: $color5;
@@ -95,15 +96,34 @@ a:hover {
   text-decoration: none;
 }
 
-.btn {
+.submitbtn {
   transition: all 0.5s;
-  background-color: $color3;
-  color: $color5;
+  padding: 10px;
+
+}
+.istyping:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+  animation: ellipsis steps(4,end) 900ms infinite;
+  content: "\2026"; 
+  width: 0px;
 }
 
-.btn:hover {
-  transform: scale(1.05, 1.05);
-  text-decoration: underline;
+@keyframes ellipsis {
+  to {
+    width: 20px;    
+  }
+}
+
+@-webkit-keyframes ellipsis {
+  to {
+    width: 20px;    
+  }
+}
+.submitbtn:hover {
+  transform: scale(0.9, 0.9);
 }
 
 label:hover {

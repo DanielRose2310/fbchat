@@ -71,4 +71,12 @@ io.on('connection', function (socket) {
     io.to(onlineUsers.find(user=>user.userId===_messagepacket.senderId).socketId).emit("MISSED_MESSAGE",_messagepacket)
   }
     })
+    socket.on('TYPING_ON', (_senderId, _recipientId)=>{
+      io.to(onlineUsers.find(user=>user.userId===_recipientId).socketId).emit("TYPING_ON",_senderId)
+
+    })
+    socket.on('TYPING_OFF', (_senderId, _recipientId)=>{
+      io.to(onlineUsers.find(user=>user.userId===_recipientId).socketId).emit("TYPING_OFF",_senderId)
+
+    })
   });

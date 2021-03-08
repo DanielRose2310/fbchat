@@ -2,7 +2,6 @@ import { Animated } from "react-animated-css";
 import React, { useCallback } from 'react';
 import ReactTooltip from 'react-tooltip';
 import {InView} from "react-intersection-observer";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import "../styles.css"
 const FA = require('react-fontawesome')
 export const ChatBox = (props) => {
@@ -58,16 +57,17 @@ export const ChatBox = (props) => {
                 <p className="py-1"> {msg.payload}</p>
               </span> 
               )}
+             {props.typingUsers.includes(log.partnerId)?<p className="istyping">{props.users.find(user=>user._id===log.partnerId).userName} is typing</p>:null}
     </div>
     <div className=" w-100" style={{ bottom: 0 }}>
     </div>
-    <span className="row p-1 justify-content-between">
+    <span className="row p-1 justify-content-around">
       <input className="w-75" disabled={!props.onlineUsers.find(onlineuser => onlineuser.userId === log.partnerId)}
         value={props.msgContent[log.partnerId] ? props.msgContent[log.partnerId] : ""}
         onChange={(e) => props.handleMsgContent(log.partnerId, e)}
         onKeyPress={(e) => { props.handleChatKeypress(props.self._id, log.partnerId, props.msgContent[log.partnerId], e) }}
         placeholder={props.onlineUsers.find(onlineuser => onlineuser.userId === log.partnerId) ? "Enter your message..." : ""}></input>
-      {props.onlineUsers.find(onlineuser => onlineuser.userId === log.partnerId) ? <button className="w-25 btn"
+      {props.onlineUsers.find(onlineuser => onlineuser.userId === log.partnerId) ? <button className="w-25 color3 submitbtn" 
         onClick={() => {
           props.handleSend(props.self._id, log.partnerId, props.msgContent[log.partnerId])
         }}>Submit</button> : <div className="w-25 text-center color2"

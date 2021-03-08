@@ -100,17 +100,37 @@ a:hover {
   text-decoration: none;
 }
 
-.btn {
+.submitbtn {
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
-  background-color: #b7adcf;
-  color: #535657;
+  padding: 10px;
 }
 
-.btn:hover {
-  -webkit-transform: scale(1.05, 1.05);
-          transform: scale(1.05, 1.05);
-  text-decoration: underline;
+.istyping:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4, end) 900ms infinite;
+  animation: ellipsis steps(4, end) 900ms infinite;
+  content: "\2026";
+  width: 0px;
+}
+
+@keyframes ellipsis {
+  to {
+    width: 20px;
+  }
+}
+
+@-webkit-keyframes ellipsis {
+  to {
+    width: 20px;
+  }
+}
+
+.submitbtn:hover {
+  -webkit-transform: scale(0.9, 0.9);
+          transform: scale(0.9, 0.9);
 }
 
 label:hover {
